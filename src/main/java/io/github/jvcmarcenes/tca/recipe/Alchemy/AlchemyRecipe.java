@@ -3,10 +3,8 @@ package io.github.jvcmarcenes.tca.recipe.Alchemy;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import io.github.jvcmarcenes.tca.TCA;
 import io.github.jvcmarcenes.tca.alchemy.AspectGroup;
 import io.github.jvcmarcenes.tca.init.ModRecipeSerializers;
 import io.github.jvcmarcenes.tca.recipe.ModRecipeTypes;

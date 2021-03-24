@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Hashtable;
@@ -13,6 +14,8 @@ public class Aspects {
 
   private static final Hashtable<ResourceLocation, AspectGroup> ITEM_ASPECTS = new Hashtable<>();
   private static final Hashtable<ResourceLocation, AspectGroup> ENTITY_ASPECTS = new Hashtable<>();
+
+  public static final NonNullList<String> ASPECTS = NonNullList.create();
 
   public static void registerItemAspects() {
     register(Items.STONE, aspects().with(TERRA, 5));
@@ -68,34 +71,39 @@ public class Aspects {
 
   private static AspectGroup aspects() { return new AspectGroup(); }
 
-  public static final String AER = "aer";
-  public static final String ALKIMIA = "alkimia";
-  public static final String ALIENIS = "alienis";
-  public static final String AQUA = "aqua";
-  public static final String BESTIA = "bestia";
-  public static final String COGNITIO = "cognitio";
-  public static final String DESIDERIUM = "desiderium";
-  public static final String EXAMINIS = "examinis";
-  public static final String GELUM = "gelum";
-  public static final String HERBA = "herba";
-  public static final String HUMANIS = "humanis";
-  public static final String IGNIS = "ignis";
-  public static final String INSTRUMENTUM = "instrumentum";
-  public static final String LUX = "lux";
-  public static final String MACHINA = "machina";
-  public static final String METALLUM = "metallum";
-  public static final String MORTUS = "mortus";
-  public static final String MOTUS = "motus";
-  public static final String ORDO = "ordo";
-  public static final String PERDITIO = "perditio";
-  public static final String POTENTIA = "potentia";
-  public static final String PRAECANTATIO = "praecantatio";
-  public static final String SENSUS = "sensus";
-  public static final String TENEBRAE = "tenebrae";
-  public static final String TERRA = "terra";
-  public static final String VICTUS = "victus";
-  public static final String VITIUM = "vitium";
-  public static final String VITREUS = "vitreus";
+  private static String createAspect(String aspect) {
+    ASPECTS.add(aspect);
+    return aspect;
+  }
 
-  public static final String NONE = "";
+  public static final String AER = createAspect("aer");
+  public static final String ALKIMIA = createAspect("alkimia");
+  public static final String ALIENIS = createAspect("alienis");
+  public static final String AQUA = createAspect("aqua");
+  public static final String BESTIA = createAspect("bestia");
+  public static final String COGNITIO = createAspect("cognitio");
+  public static final String DESIDERIUM = createAspect("desiderium");
+  public static final String EXAMINIS = createAspect("examinis");
+  public static final String GELUM = createAspect("gelum");
+  public static final String HERBA = createAspect("herba");
+  public static final String HUMANIS = createAspect("humanis");
+  public static final String IGNIS = createAspect("ignis");
+  public static final String INSTRUMENTUM = createAspect("instrumentum");
+  public static final String LUX = createAspect("lux");
+  public static final String MACHINA = createAspect("machina");
+  public static final String METALLUM = createAspect("metallum");
+  public static final String MORTUS = createAspect("mortus");
+  public static final String MOTUS = createAspect("motus");
+  public static final String ORDO = createAspect("ordo");
+  public static final String PERDITIO = createAspect("perditio");
+  public static final String POTENTIA = createAspect("potentia");
+  public static final String PRAECANTATIO = createAspect("praecantatio");
+  public static final String SENSUS = createAspect("sensus");
+  public static final String TENEBRAE = createAspect("tenebrae");
+  public static final String TERRA = createAspect("terra");
+  public static final String VICTUS = createAspect("victus");
+  public static final String VITIUM = createAspect("vitium");
+  public static final String VITREUS = createAspect("vitreus");
+
+  public static final String NONE = createAspect("");
 }

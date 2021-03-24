@@ -20,7 +20,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 
 //TODO implement boiling
-//TODO implement water levels / block state?
 public class CrucibleTE extends TileEntity implements ITickableTileEntity {
 
   public final AspectGroup aspects = new AspectGroup();
@@ -29,9 +28,11 @@ public class CrucibleTE extends TileEntity implements ITickableTileEntity {
   
   @Override
   public void tick() {
-    double x = getPos().getX();
-    double y = getPos().getY();
-    double z = getPos().getZ();
+    if (getBlockState().get(Crucible.LEVEL) == 0) return;
+
+    double x = pos.getX();
+    double y = pos.getY();
+    double z = pos.getZ();
     AxisAlignedBB aabb = new AxisAlignedBB(x, y + 1, z, x + 1, y + 1.2, z + 1);
     List<ItemEntity> items = getWorld().getEntitiesWithinAABB(ItemEntity.class, aabb, entity -> !Aspects.get(entity.getItem()).hasNone());
     items.forEach(item -> {
@@ -63,6 +64,9 @@ public class CrucibleTE extends TileEntity implements ITickableTileEntity {
     if (!recipe.isPresent()) return false;
 
     aspects.drainAll(recipe.get().getRequiredAspects());
+    world.setBlockState(pos, getBlockState().with(Crucible.LEVEL, getBlockState().get(Crucible.LEVEL) - 1));
+    //TODO play sound
+
     world.addEntity(new ItemEntity(world, getPos().getX(), getPos().getY() + 1, getPos().getZ(), recipe.get().getCraftingResult(inv)));
 
     return true;

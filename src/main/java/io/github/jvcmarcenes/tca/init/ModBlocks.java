@@ -2,7 +2,6 @@ package io.github.jvcmarcenes.tca.init;
 
 import io.github.jvcmarcenes.tca.TCA;
 import io.github.jvcmarcenes.tca.blocks.ArcaneWorkbench.ArcaneWorkbench;
-import io.github.jvcmarcenes.tca.blocks.AspectAnalyzer.AspectAnalyzer;
 import io.github.jvcmarcenes.tca.blocks.Crucible.Crucible;
 import io.github.jvcmarcenes.tca.blocks.CrystalBlock;
 import net.minecraft.block.Block;
@@ -28,8 +27,6 @@ public class ModBlocks {
     public static final RegistryObject<ArcaneWorkbench> ARCANE_WORKBENCH;
     public static final RegistryObject<Crucible> CRUCIBLE;
 
-    public static final RegistryObject<AspectAnalyzer> ASPECT_ANALYZER;
-
     public static final RegistryObject<CrystalBlock> CRYSTAL_BLOCK;
 
     static {
@@ -39,8 +36,6 @@ public class ModBlocks {
 
         ARCANE_WORKBENCH = register("arcane_workbench", ArcaneWorkbench::new);
         CRUCIBLE = register("crucible", Crucible::new);
-
-        ASPECT_ANALYZER = register("aspect_analyzer", AspectAnalyzer::new);
 
         CRYSTAL_BLOCK = register("crystal_block", () -> new CrystalBlock(Properties.create(Material.GLASS).hardnessAndResistance(0.0f)));
     }

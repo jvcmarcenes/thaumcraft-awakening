@@ -3,7 +3,6 @@ package io.github.jvcmarcenes.tca.data.server;
 import io.github.jvcmarcenes.tca.alchemy.Aspects;
 import io.github.jvcmarcenes.tca.init.ModBlocks;
 import io.github.jvcmarcenes.tca.init.ModItems;
-import io.github.jvcmarcenes.tca.recipe.Alchemy.AlchemyRecipe;
 import io.github.jvcmarcenes.tca.recipe.Alchemy.AlchemyRecipeBuilder;
 import io.github.jvcmarcenes.tca.recipe.ArcaneCrafting.ArcaneShapedRecipeBuilder;
 import net.minecraft.block.Blocks;

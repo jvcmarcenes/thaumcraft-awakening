@@ -52,7 +52,8 @@ public class ArcaneShapedRecipe implements IArcaneCraftingRecipe {
 
   @Override
   public boolean matches(ArcaneCraftingInventory inv, World worldIn) {
-    return matrixMatch(inv) && aspect.equals(inv.getAspect());
+    boolean matrixMatch = matrixMatch(inv);
+    return matrixMatch && aspect.equals(inv.getAspect());
   }
 
   private boolean matrixMatch(ArcaneCraftingInventory inv) {
