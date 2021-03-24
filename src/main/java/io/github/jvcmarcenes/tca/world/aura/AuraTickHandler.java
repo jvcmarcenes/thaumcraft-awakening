@@ -2,7 +2,6 @@ package io.github.jvcmarcenes.tca.world.aura;
 
 import com.google.common.collect.Iterables;
 import io.github.jvcmarcenes.tca.TCA;
-import io.github.jvcmarcenes.tca.init.ModCapabilities;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ChunkHolder;

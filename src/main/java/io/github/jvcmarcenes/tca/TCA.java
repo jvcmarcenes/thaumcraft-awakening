@@ -7,6 +7,7 @@ import io.github.jvcmarcenes.tca.world.aura.BiomeAuraAffinity;
 import io.github.jvcmarcenes.tca.client.ClientEventHandler;
 import io.github.jvcmarcenes.tca.client.ClientEventHandlerForge;
 import io.github.jvcmarcenes.tca.items.SalisMundus.ISalisMundusTrigger;
+import io.github.jvcmarcenes.tca.items.SalisMundus.SalisMundusEffects;
 import io.github.jvcmarcenes.tca.recipe.ModRecipeTypes;
 import io.github.jvcmarcenes.tca.world.aura.AuraChunkCapabilityProvider;
 import io.github.jvcmarcenes.tca.world.aura.AuraChunk;
@@ -72,7 +73,8 @@ public class TCA {
         BiomeAuraAffinity.registerBiomeAuraAffinities();
         Aspects.registerItemAspects();
         Aspects.registerEntityAspects();
-        ISalisMundusTrigger.registerTriggers();
+        //ISalisMundusTrigger.registerTriggers();
+        SalisMundusEffects.registerEffects();
     }
 
     @SubscribeEvent

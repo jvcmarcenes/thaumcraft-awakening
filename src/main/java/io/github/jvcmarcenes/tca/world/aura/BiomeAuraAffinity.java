@@ -10,7 +10,6 @@ import net.minecraftforge.common.BiomeDictionary;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Set;
 

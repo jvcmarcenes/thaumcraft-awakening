@@ -1,6 +1,5 @@
 package io.github.jvcmarcenes.tca.items;
 
-import io.github.jvcmarcenes.tca.init.ModCapabilities;
 import io.github.jvcmarcenes.tca.world.aura.AuraChunk;
 import io.github.jvcmarcenes.tca.world.aura.AuraWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,7 +10,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 
 public class Thaumometer extends Item {
 
