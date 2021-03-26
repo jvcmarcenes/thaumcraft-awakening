@@ -8,17 +8,16 @@ import net.minecraft.world.chunk.Chunk;
 
 public class AuraWorld {
 
-    public static AuraChunk getAuraChunkAt(World world, ChunkPos pos) {
-        return getAuraChunkAt(world, pos.asBlockPos());
-    }
+  public static AuraChunk getAuraChunkAt(World world, ChunkPos pos) {
+    return getAuraChunkAt(world, pos.asBlockPos());
+  }
 
-    public static AuraChunk getAuraChunkAt(World world, BlockPos pos) {
-        return getAuraForChunk(world.getChunkAt(pos));
-    }
+  public static AuraChunk getAuraChunkAt(World world, BlockPos pos) {
+    return getAuraForChunk(world.getChunkAt(pos));
+  }
 
-
-    public static AuraChunk getAuraForChunk(Chunk chunk) {
-        return chunk.getCapability(ModCapabilities.AURA_CHUNK_CAP).orElse(null);
-    }
-
+  public static AuraChunk getAuraForChunk(Chunk chunk) {
+    return chunk.getCapability(ModCapabilities.AURA_CHUNK_CAP)
+    .orElseThrow(() -> new IllegalStateException("Illegal chunk without aura."));
+  }
 }

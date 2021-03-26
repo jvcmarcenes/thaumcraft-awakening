@@ -48,9 +48,12 @@ public class AspectGroup {
   }
 
   public String getRandomAspectMin(int min) {
-    ArrayList<String> filteredAspects = (ArrayList)aspects.keySet().stream()
+    ArrayList<String> filteredAspects = new ArrayList<>();
+    aspects.keySet().stream()
       .filter(aspect -> hasEnough(aspect, min))
-      .collect(Collectors.toList());
+      .collect(Collectors.toList())
+      .forEach(aspect -> filteredAspects.add(aspect));
+
     if (filteredAspects.size() == 0) return Aspects.NONE;
     int i = TCA.RANDOM.nextInt(filteredAspects.size());
     return filteredAspects.get(i);
@@ -68,6 +71,10 @@ public class AspectGroup {
     toDrain.forEach((aspect, amount) -> {
       drain(aspect, amount);
     });
+  }
+
+  public void clear() {
+    aspects.clear();
   }
 
   public boolean hasNone() { return aspects.size() == 0; }

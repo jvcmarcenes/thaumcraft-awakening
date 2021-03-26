@@ -5,6 +5,7 @@ import io.github.jvcmarcenes.tca.init.ModBlocks;
 import io.github.jvcmarcenes.tca.init.ModItems;
 import io.github.jvcmarcenes.tca.recipe.Alchemy.AlchemyRecipeBuilder;
 import io.github.jvcmarcenes.tca.recipe.ArcaneCrafting.ArcaneShapedRecipeBuilder;
+import io.github.jvcmarcenes.tca.recipe.ArcaneCrafting.ArcaneShapelessRecipeBuilder;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
@@ -58,6 +59,14 @@ public class ModRecipeProvider extends RecipeProvider {
       .aspect(Aspects.ORDO)
       .addCriterion("has_item", hasItem(Items.GOLD_INGOT))
       .build(consumer);
+
+    ArcaneShapelessRecipeBuilder.create(Items.DIAMOND)
+      .addIngredient(Items.EMERALD)
+      .addIngredient(Items.CYAN_DYE)
+      .visCost(50)
+      .aspect(Aspects.VITREUS)
+      .addCriterion("has_item", hasItem(Items.EMERALD))
+      .build(consumer, "emerald_from_arcane");
 
     AlchemyRecipeBuilder.create(Items.DIAMOND, 1)
       .aspect(Aspects.VITREUS, 50)

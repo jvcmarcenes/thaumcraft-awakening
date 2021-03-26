@@ -1,11 +1,11 @@
 {
   "ambientocclusion": false,
   "textures": {
-    "particle": "tca:blocks/crucible_side",
-    "top": "tca:blocks/crucible_top",
-    "side": "tca:blocks/crucible_side",
-    "inner": "tca:blocks/crucible_inner",
-    "bottom": "tca:blocks/crucible_bottom"
+    "particle": "tca:block/crucible_side",
+    "top": "tca:block/crucible_top",
+    "side": "tca:block/crucible_side",
+    "inner": "tca:block/crucible_inner",
+    "bottom": "tca:block/crucible_bottom"
   },
   "elements": [
     {   

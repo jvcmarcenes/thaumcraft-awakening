@@ -25,21 +25,21 @@ public class ArcaneShapedRecipe implements IArcaneCraftingRecipe {
   static int MAX_WIDTH = 3;
   static int MAX_HEIGHT = 3;
 
-  private final int recipeWidth;
-  private final int recipeHeight;
+  private final int width;
+  private final int height;
 
-  private final NonNullList<Ingredient> recipeItems;
-  private final ItemStack recipeOutput;
+  private final NonNullList<Ingredient> ingredients;
+  private final ItemStack output;
   private final int visCost;
   private final String aspect;
 
   private final ResourceLocation id;
 
-  public ArcaneShapedRecipe(ResourceLocation idIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn, int visCost, String aspect) {        this.id = idIn;
-    this.recipeWidth = recipeWidthIn;
-    this.recipeHeight = recipeHeightIn;
-    this.recipeItems = recipeItemsIn;
-    this.recipeOutput = recipeOutputIn;
+  public ArcaneShapedRecipe(ResourceLocation id, int width, int height, NonNullList<Ingredient> ingredients, ItemStack output, int visCost, String aspect) {        this.id = id;
+    this.width = width;
+    this.height = height;
+    this.ingredients = ingredients;
+    this.output = output;
     this.visCost = visCost;
     this.aspect = aspect;
   }
@@ -57,8 +57,8 @@ public class ArcaneShapedRecipe implements IArcaneCraftingRecipe {
   }
 
   private boolean matrixMatch(ArcaneCraftingInventory inv) {
-    for(int i = 0; i <= inv.getWidth() - this.recipeWidth; ++i) {
-      for(int j = 0; j <= inv.getHeight() - this.recipeHeight; ++j) {
+    for(int i = 0; i <= inv.getWidth() - this.width; ++i) {
+      for(int j = 0; j <= inv.getHeight() - this.height; ++j) {
         if (this.checkMatch(inv, i, j, true)) return true;
         if (this.checkMatch(inv, i, j, false)) return true;
       }
@@ -73,14 +73,11 @@ public class ArcaneShapedRecipe implements IArcaneCraftingRecipe {
         int k = i - width;
         int l = j - height;
         Ingredient ingredient = Ingredient.EMPTY;
-        if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
-          if (mirror)
-            ingredient = this.recipeItems.get(this.recipeWidth - k - 1 + l * this.recipeWidth);
-          else
-            ingredient = this.recipeItems.get(k + l * this.recipeWidth);
-        }
+        if (k >= 0 && l >= 0 && k < this.width && l < this.height)
+          if (mirror) ingredient = this.ingredients.get(this.width - k - 1 + l * this.width);
+          else        ingredient = this.ingredients.get(k + l * this.width);
 
-        if (!ingredient.test(craftingInventory.getStackInSlot(i + j * craftingInventory.getWidth())))
+        if (!ingredient.test(craftingInventory.getStackInSlot(i + j * craftingInventory.getWidth()))) 
           return false;
       }
     }
@@ -95,11 +92,11 @@ public class ArcaneShapedRecipe implements IArcaneCraftingRecipe {
 
   @Override
   public boolean canFit(int width, int height) {
-    return width >= recipeWidth && height >= recipeHeight;
+    return width >= width && height >= height;
   }
 
   @Override
-  public ItemStack getRecipeOutput() { return recipeOutput; }
+  public ItemStack getRecipeOutput() { return output; }
 
   @Override
   public ResourceLocation getId() { return id; }
@@ -237,29 +234,29 @@ public class ArcaneShapedRecipe implements IArcaneCraftingRecipe {
       int width = buffer.readVarInt();
       int height = buffer.readVarInt();
 
-      NonNullList<Ingredient> recipeItems = NonNullList.withSize(width * height, Ingredient.EMPTY);
-      for(int k = 0; k < recipeItems.size(); ++k) recipeItems.set(k, Ingredient.read(buffer));
+      NonNullList<Ingredient> ingredients = NonNullList.withSize(width * height, Ingredient.EMPTY);
+      for(int k = 0; k < ingredients.size(); k++) ingredients.set(k, Ingredient.read(buffer));
 
       int visCost = buffer.readVarInt();
       String aspect = buffer.readString();
 
       ItemStack itemstack = buffer.readItemStack();
 
-      return new ArcaneShapedRecipe(recipeId, width, height, recipeItems, itemstack, visCost, aspect);
+      return new ArcaneShapedRecipe(recipeId, width, height, ingredients, itemstack, visCost, aspect);
     }
 
     public void write(PacketBuffer buffer, ArcaneShapedRecipe recipe) {
-      buffer.writeVarInt(recipe.recipeWidth);
-      buffer.writeVarInt(recipe.recipeHeight);
+      buffer.writeVarInt(recipe.width);
+      buffer.writeVarInt(recipe.height);
 
-      for(Ingredient ingredient : recipe.recipeItems) {
+      for(Ingredient ingredient : recipe.ingredients) {
         ingredient.write(buffer);
       }
 
       buffer.writeVarInt(recipe.visCost);
       buffer.writeString(recipe.aspect);
 
-      buffer.writeItemStack(recipe.recipeOutput);
+      buffer.writeItemStack(recipe.output);
     }
   }
 }

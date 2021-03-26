@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 
 public interface ICraftingTE {
 
-    boolean canCraft(PlayerEntity player);
-    ItemStack craft();
-
+  boolean canCraft(PlayerEntity player);
+  ItemStack craft();
 }

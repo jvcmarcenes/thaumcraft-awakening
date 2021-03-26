@@ -15,7 +15,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = '0.1.0'
-group = 'io.github.sirkastic.tca' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'io.github.jvcmarcenes.tca' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'tca'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
@@ -45,7 +45,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                tutorial {
+                tca {
                     source sourceSets.main
                 }
             }
@@ -61,7 +61,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                tutorial {
+                tca {
                     source sourceSets.main
                 }
             }
@@ -125,11 +125,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "tca",
-            "Specification-Vendor": "sirkastic",
+            "Specification-Vendor": "jvcmarcenes",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"sirkastic",
+            "Implementation-Vendor" :"jvcmarcenes",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

@@ -16,6 +16,7 @@ public class Aspects {
   private static final Hashtable<ResourceLocation, AspectGroup> ENTITY_ASPECTS = new Hashtable<>();
 
   public static final NonNullList<String> ASPECTS = NonNullList.create();
+  public static final Hashtable<String, Integer> ASPECT_COLORS = new Hashtable<>();
 
   public static void registerItemAspects() {
     register(Items.STONE, aspects().with(TERRA, 5));
@@ -71,6 +72,12 @@ public class Aspects {
 
   private static AspectGroup aspects() { return new AspectGroup(); }
 
+  private static String createAspect(String aspect, int color) {
+    ASPECTS.add(aspect);
+    ASPECT_COLORS.put(aspect, color);
+    return aspect;
+  }
+
   private static String createAspect(String aspect) {
     ASPECTS.add(aspect);
     return aspect;
@@ -87,7 +94,7 @@ public class Aspects {
   public static final String GELUM = createAspect("gelum");
   public static final String HERBA = createAspect("herba");
   public static final String HUMANIS = createAspect("humanis");
-  public static final String IGNIS = createAspect("ignis");
+  public static final String IGNIS = createAspect("ignis", 0xff0000);
   public static final String INSTRUMENTUM = createAspect("instrumentum");
   public static final String LUX = createAspect("lux");
   public static final String MACHINA = createAspect("machina");

@@ -1,10 +1,10 @@
 {
   "ambientocclusion": false,
   "textures": {
-    "particle": "tca:blocks/arcane_workbench_side",
-    "top": "tca:blocks/arcane_workbench_top",
-    "side": "tca:blocks/arcane_workbench_side",
-    "bottom": "tca:blocks/base_wood_grain"
+    "particle": "tca:block/arcane_workbench_side",
+    "top": "tca:block/arcane_workbench_top",
+    "side": "tca:block/arcane_workbench_side",
+    "bottom": "tca:block/base_wood_grain"
   },
   "elements": [
     {

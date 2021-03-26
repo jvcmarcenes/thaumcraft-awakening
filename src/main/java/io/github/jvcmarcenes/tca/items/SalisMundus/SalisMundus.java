@@ -15,26 +15,13 @@ public class SalisMundus extends Item {
   public ActionResultType onItemUse(ItemUseContext context) {
     Block block = context.getWorld().getBlockState(context.getPos()).getBlock();
 
-    if (SalisMundusEffects.hasActivator(block)) {
-      SalisMundusEffects.callEffect(block, context);
+    SalisMundusEffects.getEffect(block).ifPresent(effect -> {
+      effect.accept(context);
 
-      if (!context.getPlayer().abilities.isCreativeMode)
-        context.getPlayer().getHeldItem(context.getHand()).shrink(1);
+      if (!context.getPlayer().abilities.isCreativeMode) 
+        context.getItem().shrink(1);
+    });
 
-      return ActionResultType.SUCCESS;
-    }
-    
-    // for (ISalisMundusTrigger trigger : ISalisMundusTrigger.triggers) {
-    //   if (!trigger.validate(world, player, pos)) continue;
-
-    //   trigger.execute(world, player, pos, context);
-      
-    //   if (!player.abilities.isCreativeMode)
-    //     player.getHeldItem(context.getHand()).shrink(1);
-
-    //   return ActionResultType.SUCCESS;
-    // }
-    
-    return super.onItemUse(context);
+    return ActionResultType.SUCCESS;
   }
 }

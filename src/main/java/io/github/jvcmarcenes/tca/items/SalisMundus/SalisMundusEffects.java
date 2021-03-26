@@ -1,6 +1,7 @@
 package io.github.jvcmarcenes.tca.items.SalisMundus;
 
 import java.util.Hashtable;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.github.jvcmarcenes.tca.init.ModBlocks;
@@ -19,20 +20,12 @@ public class SalisMundusEffects {
   
   private static final Hashtable<Block, Consumer<ItemUseContext>> effects = new Hashtable<>();
 
-  public static boolean hasActivator(Block key) {
-    return effects.containsKey(key);
+  public static Optional<Consumer<ItemUseContext>> getEffect(Block key) {
+    return effects.containsKey(key) ? Optional.of(effects.get(key)) : Optional.empty();
   }
 
-  public static Consumer<ItemUseContext> getEffect(Block key) {
-    return effects.get(key);
-  }
-
-  public static void callEffect(Block key, ItemUseContext context) {
-    effects.get(key).accept(context);
-  }
-
-  public static void addEffect(Block activator, Consumer<ItemUseContext> effect) {
-    effects.put(activator, effect);
+  public static void addEffect(Block key, Consumer<ItemUseContext> effect) {
+    effects.put(key, effect);
   }
 
   public static void registerEffects() {

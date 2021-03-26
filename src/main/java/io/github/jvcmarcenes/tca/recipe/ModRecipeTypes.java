@@ -12,13 +12,13 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = TCA.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRecipeTypes {
 
-    public static IRecipeType<IArcaneCraftingRecipe> ARCANE;
-    public static IRecipeType<AlchemyRecipe> ALCHEMY;
+  public static IRecipeType<IArcaneCraftingRecipe> ARCANE;
+  public static IRecipeType<AlchemyRecipe> ALCHEMY;
 
 
-    @SubscribeEvent
-    public static void registerRecipeTypes(RegistryEvent.Register<IRecipeSerializer<?>> e) {
-        ARCANE = IRecipeType.register("arcane_crafting");
-        ALCHEMY = IRecipeType.register("alchemy");
-    }
+  @SubscribeEvent
+  public static void registerRecipeTypes(RegistryEvent.Register<IRecipeSerializer<?>> e) {
+    ARCANE = IRecipeType.register("arcane_crafting");
+    ALCHEMY = IRecipeType.register("alchemy");
+  }
 }
