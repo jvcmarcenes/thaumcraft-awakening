@@ -20,20 +20,12 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 public class CrucibleBakedModel implements IBakedModel {
 
   public CrucibleBakedModel(IBakedModel baseModel) {
     this.baseModel = baseModel;
   }
-
-  public static ModelProperty<Integer> LEVEL = new ModelProperty<>();
-
-  // @Override
-  // public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
-  //   return (new ModelDataMap.Builder()).withInitial(LEVEL, state.get(Crucible.LEVEL)).build();
-  // }
 
   @Override
   public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
@@ -45,22 +37,19 @@ public class CrucibleBakedModel implements IBakedModel {
 
     float waterLevel = ((float)state.get(Crucible.LEVEL)/(float)Crucible.MAX_LEVEL) * 11 + 4;
     
-    BlockFaceUV blockFaceUV = new BlockFaceUV(new float[]{2, 2, 14, 14}, 0);
-    BlockPartFace blockPartFace = new BlockPartFace(null, 23, "", blockFaceUV);
-
     TextureAtlasSprite tex = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE)
       .getSprite(new ResourceLocation("minecraft", "block/water_still"));
 
     BakedQuad waterQuad = faceBakery.bakeQuad(
       new Vector3f(2, waterLevel, 2), new Vector3f(14, waterLevel, 14), 
-      blockPartFace, tex, Direction.UP, SimpleModelTransform.IDENTITY, 
+      new BlockPartFace(null, 23, "", new BlockFaceUV(new float[]{2, 2, 14, 14}, 0)), 
+      tex, Direction.UP, SimpleModelTransform.IDENTITY, 
       null, true, new ResourceLocation("dummy"));
 
     quads.add(waterQuad);
 
     return quads;
   }
-
 
   private FaceBakery faceBakery = new FaceBakery();
   private IBakedModel baseModel;

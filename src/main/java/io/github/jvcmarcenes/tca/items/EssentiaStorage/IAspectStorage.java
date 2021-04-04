@@ -1,26 +1,26 @@
-package io.github.jvcmarcenes.tca.alchemy;
+package io.github.jvcmarcenes.tca.items.EssentiaStorage;
 
+import io.github.jvcmarcenes.tca.alchemy.Aspects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 
 public interface IAspectStorage {
 
-  int getStoredAmount();
+  int getStoredAmount(ItemStack stack);
+  int getStorageLeft(ItemStack stack);
+  boolean fillsPartially();
+  ItemStack create(String aspect, int amount, int count);
 
   public static final String ASPECT_TAG = "aspect";
 
   public static void setStoredAspect(ItemStack stack, String aspect) {
     assert stack.getItem() instanceof IAspectStorage;
 
-    CompoundNBT tag = new CompoundNBT();
-    tag.putString(ASPECT_TAG, aspect);
-    stack.setTag(tag);
+    stack.getOrCreateTag().putString(ASPECT_TAG, aspect);
   }
 
   public static String getStoredAspect(ItemStack stack) {
     assert stack.getItem() instanceof IAspectStorage;
 
-    if (stack.isEmpty()) return Aspects.NONE;
     return stack.hasTag() ? stack.getTag().getString(ASPECT_TAG) : Aspects.NONE;
   };
 }

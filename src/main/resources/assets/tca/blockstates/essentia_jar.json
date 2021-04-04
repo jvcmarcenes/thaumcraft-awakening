@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "tca:block/essentia_jar"
+    }
+  }
+}

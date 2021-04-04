@@ -1,6 +1,7 @@
 package io.github.jvcmarcenes.tca.alchemy;
 
 import io.github.jvcmarcenes.tca.TCA;
+import io.github.jvcmarcenes.tca.items.EssentiaStorage.IAspectStorage;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -47,11 +48,13 @@ public class Aspects {
   }
 
   public static AspectGroup get(ItemStack stack) {
+    if (stack.isEmpty()) return AspectGroup.EMPTY;
+
     Item item = stack.getItem();
     return item instanceof IAspectStorage ? 
-      IAspectStorage.getStoredAspect(stack) == "" ? 
+      IAspectStorage.getStoredAspect(stack).equals(Aspects.NONE) ? 
         AspectGroup.EMPTY
-        : aspects().with(IAspectStorage.getStoredAspect(stack), ((IAspectStorage)item).getStoredAmount())
+        : aspects().with(IAspectStorage.getStoredAspect(stack), ((IAspectStorage)item).getStoredAmount(stack))
       : ITEM_ASPECTS.containsKey(item.getRegistryName()) ? 
         ITEM_ASPECTS.get(item.getRegistryName()) 
         : AspectGroup.EMPTY;
@@ -83,34 +86,36 @@ public class Aspects {
     return aspect;
   }
 
-  public static final String AER = createAspect("aer");
-  public static final String ALKIMIA = createAspect("alkimia");
-  public static final String ALIENIS = createAspect("alienis");
-  public static final String AQUA = createAspect("aqua");
-  public static final String BESTIA = createAspect("bestia");
-  public static final String COGNITIO = createAspect("cognitio");
-  public static final String DESIDERIUM = createAspect("desiderium");
-  public static final String EXAMINIS = createAspect("examinis");
-  public static final String GELUM = createAspect("gelum");
-  public static final String HERBA = createAspect("herba");
-  public static final String HUMANIS = createAspect("humanis");
-  public static final String IGNIS = createAspect("ignis", 0xff0000);
-  public static final String INSTRUMENTUM = createAspect("instrumentum");
-  public static final String LUX = createAspect("lux");
-  public static final String MACHINA = createAspect("machina");
-  public static final String METALLUM = createAspect("metallum");
-  public static final String MORTUS = createAspect("mortus");
-  public static final String MOTUS = createAspect("motus");
-  public static final String ORDO = createAspect("ordo");
-  public static final String PERDITIO = createAspect("perditio");
-  public static final String POTENTIA = createAspect("potentia");
-  public static final String PRAECANTATIO = createAspect("praecantatio");
-  public static final String SENSUS = createAspect("sensus");
-  public static final String TENEBRAE = createAspect("tenebrae");
-  public static final String TERRA = createAspect("terra");
-  public static final String VICTUS = createAspect("victus");
-  public static final String VITIUM = createAspect("vitium");
-  public static final String VITREUS = createAspect("vitreus");
+  public static final String AER = createAspect("aer", 0xffe25e);
+  public static final String ALKIMIA = createAspect("alkimia", 0x51e0a2);
+  public static final String ALIENIS = createAspect("alienis", 0x7918ba);
+  public static final String AURAM = createAspect("auram", 0xe398d9);
+  public static final String AQUA = createAspect("aqua", 0x27a4e3);
+  public static final String BESTIA = createAspect("bestia", 0xb58326);
+  public static final String COGNITIO = createAspect("cognitio", 0xe8cbb7);
+  public static final String DESIDERIUM = createAspect("desiderium", 0xd1c217);
+  //public static final String EXAMINIS = createAspect("examinis");
+  public static final String GELUM = createAspect("gelum", 0xc8e2e8);
+  public static final String HERBA = createAspect("herba", 0x27a614);
+  public static final String HUMANIS = createAspect("humanis", 0xebd1b2);
+  public static final String IGNIS = createAspect("ignis", 0xde581f);
+  public static final String INSTRUMENTUM = createAspect("instrumentum", 0x151aab);
+  public static final String LUX = createAspect("lux", 0xd9cd4e);
+  public static final String MACHINA = createAspect("machina", 0x757575);
+  public static final String METALLUM = createAspect("metallum", 0xc4c4c4);
+  public static final String MORTUS = createAspect("mortus", 0x961a1a);
+  public static final String MOTUS = createAspect("motus", 0xcfcfcf);
+  public static final String ORDO = createAspect("ordo", 0xf4f4f4);
+  public static final String PERDITIO = createAspect("perditio", 0x1f1f1f);
+  public static final String POTENTIA = createAspect("potentia", 0xa0d9d1);
+  public static final String PRAECANTATIO = createAspect("praecantatio", 0x9324e6);
+  public static final String SENSUS = createAspect("sensus", 0x0fa8a8);
+  public static final String SPIRITUS = createAspect("spiritus", 0xf8f8f8);
+  public static final String TENEBRAE = createAspect("tenebrae", 0x1f1f1f);
+  public static final String TERRA = createAspect("terra", 0x319b15);
+  public static final String VICTUS = createAspect("victus", 0xe60e0e);
+  public static final String VITIUM = createAspect("vitium", 0x4c147a);
+  public static final String VITREUS = createAspect("vitreus", 0x84cab8);
 
-  public static final String NONE = createAspect("");
+  public static final String NONE = "";
 }

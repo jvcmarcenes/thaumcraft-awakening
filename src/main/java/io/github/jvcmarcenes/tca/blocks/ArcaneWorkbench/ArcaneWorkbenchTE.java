@@ -1,14 +1,15 @@
 package io.github.jvcmarcenes.tca.blocks.ArcaneWorkbench;
 
-import io.github.jvcmarcenes.tca.alchemy.IAspectStorage;
 import io.github.jvcmarcenes.tca.init.ModBlocks;
-import io.github.jvcmarcenes.tca.items.AspectPhial;
+import io.github.jvcmarcenes.tca.items.EssentiaStorage.AspectPhial;
+import io.github.jvcmarcenes.tca.items.EssentiaStorage.IAspectStorage;
 import io.github.jvcmarcenes.tca.items.VisStorageItem.VisStorage;
 import io.github.jvcmarcenes.tca.recipe.ArcaneCrafting.ArcaneCraftingInventory;
 import io.github.jvcmarcenes.tca.util.ICraftingTE;
 import io.github.jvcmarcenes.tca.init.ModTileEntityTypes;
 import io.github.jvcmarcenes.tca.recipe.ArcaneCrafting.IArcaneCraftingRecipe;
 import io.github.jvcmarcenes.tca.recipe.ModRecipeTypes;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -16,6 +17,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -203,6 +205,7 @@ public class ArcaneWorkbenchTE extends TileEntity implements INamedContainerProv
     return output;
   }
 
+  // Handles the crafting of many items, as when the player shift-clicks the recipe output
   public ItemStack onCraftMany(PlayerInventory playerInv) {
     int amount = 64;
     for (int _slot = CRAFT_MATRIX_SLOT_START; _slot <= CRAFT_MATRIX_SLOT_END; _slot++){
@@ -221,6 +224,34 @@ public class ArcaneWorkbenchTE extends TileEntity implements INamedContainerProv
     return ItemStack.EMPTY;
   }
 
+  // NBT serialization and deserialization
+  private static final String INVENTORY_TAG = "inventory";
+  private static final String VISCOST_TAG = "visCost";
+
+  @Override
+  public CompoundNBT write(CompoundNBT nbt) {
+    super.write(nbt);
+
+    nbt.put(INVENTORY_TAG, inventory.serializeNBT());
+    nbt.putInt(VISCOST_TAG, visCost);
+
+    return nbt;
+  }
+
+  @Override
+  public void read(BlockState state, CompoundNBT nbt) {
+    super.read(state, nbt);
+
+    inventory.deserializeNBT(nbt.getCompound(INVENTORY_TAG));
+    visCost = nbt.getInt(VISCOST_TAG);
+  }
+
+  @Override
+  public CompoundNBT getUpdateTag() {
+    return this.write(new CompoundNBT());
+  }
+
+  // INamedContainerProvider methods
   @Override
   public ITextComponent getDisplayName() {
     return new TranslationTextComponent(ModBlocks.ARCANE_WORKBENCH.get().getTranslationKey());

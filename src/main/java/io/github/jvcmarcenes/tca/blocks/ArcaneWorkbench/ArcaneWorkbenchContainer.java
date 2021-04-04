@@ -2,7 +2,7 @@ package io.github.jvcmarcenes.tca.blocks.ArcaneWorkbench;
 
 import io.github.jvcmarcenes.tca.init.ModBlocks;
 import io.github.jvcmarcenes.tca.init.ModContainerTypes;
-import io.github.jvcmarcenes.tca.items.AspectPhial;
+import io.github.jvcmarcenes.tca.items.EssentiaStorage.AspectPhial;
 import io.github.jvcmarcenes.tca.items.VisStorageItem.VisStorage;
 import io.github.jvcmarcenes.tca.util.CraftingOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,41 +35,43 @@ public class ArcaneWorkbenchContainer extends Container {
       @Override public void set(int value) { tileEntity.setVisStorageCharge(value); }
     });
 
-    final int slotSizePlus2 = 18;
+    
 
     //Craft Matrix
-    final int craftMatStartX = 30;
-    final int craftMatStartY = 17;
+    final int craftGap = 24;
+    final int craftMatStartX = 68;
+    final int craftMatStartY = 40;
     for (int row = 0; row < 3; row++) for (int column = 0; column < 3; column++)
       this.addSlot(new SlotItemHandler(tileEntity.inventory,
         row * 3 + column,
-        craftMatStartX + column * slotSizePlus2,
-        craftMatStartY + row * slotSizePlus2
+        craftMatStartX + column * craftGap,
+        craftMatStartY + row * craftGap
       ));
 
     //Output Slot
-    this.addSlot(new CraftingOutputSlot(tileEntity.inventory, ArcaneWorkbenchTE.OUTPUT_SLOT, 124, 35, tileEntity));
+    this.addSlot(new CraftingOutputSlot(tileEntity.inventory, ArcaneWorkbenchTE.OUTPUT_SLOT, 188, 64, tileEntity));
 
     //Vis Storage Slot
-    this.addSlot(new SlotItemHandler(tileEntity.inventory, ArcaneWorkbenchTE.CRYSTAL_SLOT, 6, 35));
+    this.addSlot(new SlotItemHandler(tileEntity.inventory, ArcaneWorkbenchTE.CRYSTAL_SLOT, 7, 115));
 
     //Aspect Phial Slot
-    this.addSlot(new SlotItemHandler(tileEntity.inventory, ArcaneWorkbenchTE.PHIAL_SLOT, 116, 65));
+    this.addSlot(new SlotItemHandler(tileEntity.inventory, ArcaneWorkbenchTE.PHIAL_SLOT, 188, 24));
 
     //Player Inventory
-    final int playerInvStartX = 8;
-    final int playerInvStartY = 84;
-    final int playerHotbarY = playerInvStartY + slotSizePlus2 * 3 + 4;
+    final int invGap = 18;
+    final int playerInvStartX = 22;
+    final int playerInvStartY = 153;
+    final int playerHotbarY = playerInvStartY + invGap * 3 + 4;
     for (int row = 0; row < 3; row++) for (int column = 0; column < 9; column++)
       this.addSlot(new Slot(playerInventory,
         9 + (row * 9) + column,
-        playerInvStartX + (column * slotSizePlus2),
-        playerInvStartY + (row * slotSizePlus2)
+        playerInvStartX + (column * invGap),
+        playerInvStartY + (row * invGap)
       ));
     for (int column = 0; column < 9; column++)
       this.addSlot(new Slot(playerInventory,
         column,
-        playerInvStartX + (column * slotSizePlus2),
+        playerInvStartX + (column * invGap),
         playerHotbarY
       ));
   }

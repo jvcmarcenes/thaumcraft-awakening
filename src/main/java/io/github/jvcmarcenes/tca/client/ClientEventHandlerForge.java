@@ -5,6 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.jvcmarcenes.tca.TCA;
 import io.github.jvcmarcenes.tca.alchemy.Aspects;
 import io.github.jvcmarcenes.tca.blocks.Crucible.CrucibleTE;
+import io.github.jvcmarcenes.tca.blocks.EssentiaJar.EssentiaJarTE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,6 @@ import net.minecraft.util.text.Color;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,6 +34,7 @@ public class ClientEventHandlerForge {
       );
   }
 
+  //TODO move aspect rendering to a TER, possibly
   @SubscribeEvent
   public static void onRenderWorld(final RenderWorldLastEvent event) {
     Minecraft mc = Minecraft.getInstance();
@@ -64,6 +65,25 @@ public class ClientEventHandlerForge {
 
       ms.pop();
     }
-  }
 
+    if (te instanceof EssentiaJarTE) {
+      EssentiaJarTE jarTe = (EssentiaJarTE)te;
+
+      String display = "[" + (jarTe.getAspect().equals(Aspects.NONE) ? "NO ASPECTS" : jarTe.getAmount() + " " + jarTe.getAspect()) + "]";
+
+      MatrixStack ms = event.getMatrixStack();
+
+      ms.push();
+      
+      ms.translate(blockPos.getX() + .5 - mc.player.getPosX(), blockPos.getY() + 1.4 - mc.player.getPosYEye(), blockPos.getZ() + .5 - mc.player.getPosZ());
+      ms.rotate(mc.getRenderManager().getCameraOrientation());
+      ms.scale(-0.02f, -0.02f, 0.02f);
+      
+      int w = mc.fontRenderer.getStringWidth(display);
+      mc.fontRenderer.drawString(ms, display, -w/2, 0, 0xbf80ff);
+
+      ms.pop();
+    }
+  }
+  
 }

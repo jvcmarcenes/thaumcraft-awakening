@@ -26,6 +26,7 @@ public class ArcaneWorkbench extends Block {
         .hardnessAndResistance(3, 10)
         .harvestTool(ToolType.AXE)
         .sound(SoundType.WOOD)
+        .notSolid()
     );
   }
 

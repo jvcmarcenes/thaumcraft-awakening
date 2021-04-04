@@ -1,5 +1,8 @@
 package io.github.jvcmarcenes.tca.items.SalisMundus;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
@@ -15,13 +18,17 @@ public class SalisMundus extends Item {
   public ActionResultType onItemUse(ItemUseContext context) {
     Block block = context.getWorld().getBlockState(context.getPos()).getBlock();
 
-    SalisMundusEffects.getEffect(block).ifPresent(effect -> {
-      effect.accept(context);
+    Optional<Consumer<ItemUseContext>> effect = SalisMundusEffects.getEffect(block);
 
-      if (!context.getPlayer().abilities.isCreativeMode) 
+    if (effect.isPresent()) {
+      effect.get().accept(context);
+
+      if (!context.getPlayer().abilities.isCreativeMode)
         context.getItem().shrink(1);
-    });
 
-    return ActionResultType.SUCCESS;
+      return ActionResultType.SUCCESS;
+    } else {
+      return ActionResultType.PASS;
+    }
   }
 }

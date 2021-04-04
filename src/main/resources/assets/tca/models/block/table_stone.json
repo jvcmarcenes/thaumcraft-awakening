@@ -1,0 +1,9 @@
+{
+    "parent": "tca:block/table_wood",
+    "textures": {
+        "particle": "tca:block/table_stone_top",
+        "top": "tca:block/table_stone_top",
+        "side": "tca:block/table_stone_side",
+        "bottom": "tca:block/base_stone"
+    }
+}

@@ -3,14 +3,17 @@ package io.github.jvcmarcenes.tca.blocks.Crucible;
 import java.util.Random;
 
 import io.github.jvcmarcenes.tca.alchemy.Aspects;
-import io.github.jvcmarcenes.tca.alchemy.IAspectStorage;
+import io.github.jvcmarcenes.tca.init.ModBlocks;
 import io.github.jvcmarcenes.tca.init.ModTileEntityTypes;
+import io.github.jvcmarcenes.tca.items.EssentiaStorage.IAspectStorage;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -71,6 +74,17 @@ public class Crucible extends Block {
     return ModTileEntityTypes.CRUCIBLE.get().create();
   }
 
+  // BlockState API methods
+  public void incrementIfPossible(World world, BlockState state, BlockPos pos) {
+    assert state.isIn(ModBlocks.CRUCIBLE.get());
+    if (state.get(LEVEL) < MAX_LEVEL) world.setBlockState(pos, state.with(LEVEL, state.get(LEVEL) + 1));
+  }
+
+  public void decrementIfPossible(World world, BlockState state, BlockPos pos) {
+    assert state.isIn(ModBlocks.CRUCIBLE.get());
+    if (state.get(LEVEL) > 0) world.setBlockState(pos, state.with(LEVEL, state.get(LEVEL) - 1));
+  }
+
   @Override
   public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
     if (world.isRemote) return ActionResultType.SUCCESS;
@@ -78,34 +92,66 @@ public class Crucible extends Block {
     CrucibleTE te = (CrucibleTE)world.getTileEntity(pos);
     ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 
-    //TODO add sfx 
+    // Fill the Crucible with water
     if (Items.WATER_BUCKET.equals(stack.getItem()) && state.get(LEVEL) < MAX_LEVEL) {
       world.setBlockState(pos, state.with(LEVEL, MAX_LEVEL));
 
-      stack.shrink(1);
-      player.inventory.addItemStackToInventory(new ItemStack(Items.BUCKET));
-    } else if (state.get(LEVEL) > 0){
-      if (stack.getItem() instanceof IAspectStorage && IAspectStorage.getStoredAspect(stack) == Aspects.NONE) {
-        int amount = ((IAspectStorage)stack.getItem()).getStoredAmount();
-        String aspect = te.aspects.getRandomAspectMin(amount);
-
-        te.aspects.drain(aspect, amount);
-        world.setBlockState(pos, state.with(LEVEL, state.get(LEVEL) - 1));
-
-        ItemStack newStack = new ItemStack(stack.getItem(), 1);
-        IAspectStorage.setStoredAspect(newStack, aspect);
-        
+      if (!player.abilities.isCreativeMode) {
         stack.shrink(1);
-        player.inventory.addItemStackToInventory(newStack);
-      } else if (state.get(BOILING)) {
-        te.meltItem(player.getHeldItem(Hand.MAIN_HAND));
+        player.inventory.addItemStackToInventory(new ItemStack(Items.BUCKET));
+      }
+
+      return ActionResultType.CONSUME;
+    }
+
+    if (stack.getItem() instanceof IAspectStorage) {
+      IAspectStorage aspectStorage = (IAspectStorage)stack.getItem();
+      
+      String aspect = IAspectStorage.getStoredAspect(stack);
+      int storageLeft = aspectStorage.getStorageLeft(stack);
+      
+      if (storageLeft == 0 || (!aspect.equals(Aspects.NONE) && !te.aspects.has(aspect))) {
+        // Pours the Phial essentia into the crucible
+        te.meltItemStack(splitStackForMelting(stack));
+        player.inventory.addItemStackToInventory(aspectStorage.create(Aspects.NONE, 0, 1));
+
+        if (state.get(LEVEL) < MAX_LEVEL) incrementIfPossible(world, state, pos);
+
+        return ActionResultType.SUCCESS;
+
+      } else if (state.get(LEVEL) > 0) {
+        // Fills Phial with essentia
+        if (aspect.equals(Aspects.NONE)) 
+          aspect = aspectStorage.fillsPartially() ? te.aspects.getRandomAspect() : te.aspects.getRandomAspectMin(storageLeft);
+
+        int drainedAmount = te.aspects.drain(aspect, storageLeft, aspectStorage.fillsPartially());
+
+        if (drainedAmount <= 0) return ActionResultType.PASS;
+
+        decrementIfPossible(world, state, pos);
+
         stack.shrink(1);
+        player.inventory.addItemStackToInventory(aspectStorage.create(aspect, drainedAmount, 1));
+
+        return ActionResultType.SUCCESS;
       }
     }
+    
+    if (state.get(LEVEL) == 0 || !state.get(BOILING)) return ActionResultType.PASS;
+
+    te.meltItemStack(splitStackForMelting(stack));
 
     return ActionResultType.SUCCESS;
   }
 
+  private static ItemStack splitStackForMelting(ItemStack stack) {
+    ItemStack ret = stack.copy();
+    ret.setCount(1);
+    stack.shrink(1);
+    return ret;
+  }
+
+  // Ticking stuff
   @Override
   public void fillWithRain(World world, BlockPos pos) {
     if (world.rand.nextInt(20) > 1) return;
@@ -124,24 +170,36 @@ public class Crucible extends Block {
   public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
     CrucibleTE te = (CrucibleTE)world.getTileEntity(pos);
     String aspect = te.aspects.getRandomAspect();
-    te.aspects.drain(aspect, 1);
+    te.aspects.drain(aspect, 1, true);
+
+    te.getWorld().notifyBlockUpdate(pos, state, state, 2);
   }
 
-  @Override // TODO fix particle spawning
+  @Override
   public void animateTick(BlockState state, World world, BlockPos pos, Random rand) {
     if (!state.get(BOILING)) return;
 
-    float x = pos.getX() + (rand.nextInt(11) + 2)/11;
-    float y = (float)pos.getY() + (((float)state.get(LEVEL)/(float)MAX_LEVEL) * 11 + 4)/16f;
-    float z = pos.getZ() + (rand.nextInt(11) + 2)/11;
+    float x = pos.getX() + (rand.nextInt(11) + 2) / 11f;
+    float y = (float)pos.getY() + (state.get(LEVEL) / (float)MAX_LEVEL * 11 + 4) / 16f;
+    float z = pos.getZ() + (rand.nextInt(11) + 2) / 11f;
 
     world.addParticle(ParticleTypes.BUBBLE, false, x, y, z, 0f, .1f, 0f);
   }
 
+  // Shape stuff
   @Override
   public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-    if (state.get(LEVEL) > 0 && state.get(BOILING))
-      entity.attackEntityFrom(DamageSource.IN_FIRE, 1f);
+    if (state.get(LEVEL) == 0 || !state.get(BOILING)) return;
+
+    if (entity instanceof LivingEntity) entity.attackEntityFrom(DamageSource.IN_FIRE, 1f);
+    else if (entity instanceof ItemEntity) {
+      CrucibleTE te = (CrucibleTE)world.getTileEntity(pos);
+
+      ItemEntity itemEntity = (ItemEntity)entity;
+      te.meltItemStack(itemEntity.getItem());
+
+      itemEntity.remove();
+    }
   }
 
   private static final VoxelShape INSIDE = makeCuboidShape(2, 4, 2, 14, 16, 14);

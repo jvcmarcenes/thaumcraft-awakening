@@ -17,12 +17,32 @@ public class ModItemModelProvider extends ItemModelProvider {
       
     blockItem("crucible");
     blockItem("arcane_workbench");
+    blockItem("table_wood");
+    blockItem("table_stone");
+
+    blockItem("silverwood_log");
+    blockItem("silverwood_planks");
+    blockItem("greatwood_log");
+    blockItem("greatwood_planks");
+
+    blockItem("essentia_jar");
 
     builder("salis_mundus");
+    builder("nitor");
+    builder("thaumonomicon");
+    builder("scribing_tools");
+    
     getBuilder("aspect_phial")
       .parent(getExistingFile(mcLoc("item/generated")))
       .texture("layer0", "item/phial")
-      .texture("layer1", "item/phial_overlay");
+      .texture("layer1", "item/phial_overlay")
+      .override()
+        .predicate(modLoc("empty"), 1f)
+        .model(
+          getBuilder("empty_phial")
+            .parent(getExistingFile(mcLoc("item/generated")))
+            .texture("layer0", "item/phial")
+        ).end();
   }
 
   private ItemModelBuilder builder(String name) {
@@ -31,6 +51,6 @@ public class ModItemModelProvider extends ItemModelProvider {
   }
 
   private ItemModelBuilder blockItem(String name) {
-    return withExistingParent(name, modLoc(name));
+    return withExistingParent(name, modLoc("block/" + name));
   }
 }

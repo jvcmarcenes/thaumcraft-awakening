@@ -1,0 +1,58 @@
+{
+  "parent": "block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "tca:block/base_wood_grain",
+    "top": "tca:block/research_table/top_right",
+    "bottom": "tca:block/research_table/bottom_right",
+    "shortside": "tca:block/research_table/short_side",
+    "longside": "tca:block/research_table/long_side_right",
+    "underbar": "tca:block/research_table/underbar_right"
+  },
+  "elements": [
+    {
+      "from": [0, 12, 0], 
+      "to": [16, 16, 16],
+      "faces": {
+        "up": { "texture": "#top", "cullface": "up" },
+        "down": { "texture": "#bottom" },
+        "east": { "uv": [0, 0, 16, 4], "texture": "#shortside", "cullface": "west" },
+        "north": { "uv": [0, 0, 16, 4], "texture": "#longside", "cullface": "north" },
+        "south": { "uv": [0, 0, 16, 4], "texture": "#longside", "cullface": "south" }
+      }
+    },
+    {
+      "from": [10, 0, 2], 
+      "to": [14, 12, 6],
+      "faces": {
+        "down": { "uv": [10, 2, 14, 6], "texture": "#bottom", "cullface": "south" },
+        "east": { "uv": [2, 4, 6, 16], "texture": "#shortside" },
+        "west": { "uv": [2, 4, 6, 16], "texture": "#shortside" },
+        "north": { "uv": [10, 4, 14, 16], "texture": "#longside" },
+        "south": { "uv": [10, 4, 14, 16], "texture": "#longside" }
+      }
+    },
+    {
+      "from": [10, 0, 10], 
+      "to": [14, 12, 14],
+      "faces": {
+        "down": { "uv": [10, 10, 14, 14], "texture": "#bottom", "cullface": "south" },
+        "east": { "uv": [2, 4, 6, 16], "texture": "#shortside" },
+        "west": { "uv": [2, 4, 6, 16], "texture": "#shortside" },
+        "north": { "uv": [10, 4, 14, 16], "texture": "#longside" },
+        "south": { "uv": [10, 4, 14, 16], "texture": "#longside" }
+      }
+    },
+    {
+      "from": [0, 3, 6], 
+      "to": [12, 7, 10],
+      "faces": {
+        "up": { "uv": [0, 6, 12, 10], "texture": "#underbar" },
+        "down": { "uv": [0, 6, 12, 10], "texture": "#underbar" },
+        "east": { "uv": [6, 9, 10, 13], "texture": "#shortside" },
+        "north": { "uv": [0, 6, 12, 10], "texture": "#underbar" },
+        "south": { "uv": [0, 6, 12, 10], "texture": "#underbar" }
+      }
+    }
+  ]
+}

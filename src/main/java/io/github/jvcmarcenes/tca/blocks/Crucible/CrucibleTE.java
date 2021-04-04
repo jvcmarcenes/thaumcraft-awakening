@@ -1,8 +1,6 @@
 package io.github.jvcmarcenes.tca.blocks.Crucible;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.jvcmarcenes.tca.alchemy.AspectGroup;
 import io.github.jvcmarcenes.tca.alchemy.Aspects;
@@ -10,63 +8,69 @@ import io.github.jvcmarcenes.tca.init.ModTileEntityTypes;
 import io.github.jvcmarcenes.tca.recipe.ModRecipeTypes;
 import io.github.jvcmarcenes.tca.recipe.Alchemy.AlchemyRecipe;
 import io.github.jvcmarcenes.tca.recipe.Alchemy.AlchemyRecipeInventory;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
 
 public class CrucibleTE extends TileEntity implements ITickableTileEntity {
 
   public final AspectGroup aspects = new AspectGroup();
   private int heat = 0;
+  private final int boilingHeat = 400;
+  private final int heatDamper = 40;
 
   public CrucibleTE() { super(ModTileEntityTypes.CRUCIBLE.get()); }
   
   @Override
   public void tick() {
-    if (getBlockState().get(Crucible.LEVEL) == 0) return;
-
     updateBoilingState();
-    if (!getBlockState().get(Crucible.BOILING)) return;
+  }
 
-    double x = pos.getX();
-    double y = pos.getY();
-    double z = pos.getZ();
-    AxisAlignedBB aabb = new AxisAlignedBB(x + 2/16, y + 3/16, z + 2/16, x + 14/16, y + 17/16, z + 14/16);
-    List<ItemEntity> items = getWorld().getEntitiesWithinAABB(ItemEntity.class, aabb, entity -> !Aspects.get(entity.getItem()).hasNone());
-    items.forEach(item -> {
-      meltItem(item.getItem());
-      item.remove();
-    });
+  private boolean isHeatSource(BlockState state) {
+    return state.isInAndMatches(BlockTags.CAMPFIRES, campfire -> campfire.get(CampfireBlock.LIT))
+      || state.isIn(Blocks.FIRE);
   }
 
   private void updateBoilingState() {
-    boolean hasHeatSource = world.getBlockState(getPos().down()).isIn(Blocks.TORCH);
+    if (getBlockState().get(Crucible.LEVEL) == 0) {
+      if (getBlockState().get(Crucible.BOILING))
+        world.setBlockState(getPos(), getBlockState().with(Crucible.BOILING, false));
+
+      return;
+    }
+
+    boolean hasHeatSource = isHeatSource(world.getBlockState(getPos().down()));
     boolean isBoiling = getBlockState().get(Crucible.BOILING);
 
-    if (hasHeatSource && heat < 400) heat++;
+    if (hasHeatSource && heat < boilingHeat) heat++;
     else if (!hasHeatSource && heat > 0) heat--;
 
-    if (!isBoiling && heat >= 360)
-      world.setBlockState(getPos(), world.getBlockState(pos).with(Crucible.BOILING, true));
-    else if (isBoiling && heat <= 40)
-      world.setBlockState(getPos(), world.getBlockState(pos).with(Crucible.BOILING, false));
+    if (!isBoiling && heat >= boilingHeat - heatDamper)
+      world.setBlockState(getPos(), getBlockState().with(Crucible.BOILING, true));
+    else if (isBoiling && heat <= heatDamper)
+      world.setBlockState(getPos(), getBlockState().with(Crucible.BOILING, false));
   }
 
-  public void meltItem(ItemStack in) {
+  public void meltItemStack(ItemStack in) {
     if (in.isEmpty()) return;
 
-    boolean wasCatalyst = tryCraft(in);
-    if (!wasCatalyst) aspects.addAll(Aspects.get(in));
+    for (int i = 0; i < in.getCount(); i++) {
+      boolean wasCatalyst = tryCraft(in);
+      if (!wasCatalyst) aspects.addAll(Aspects.get(in));
+    }
 
     world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2);
   }
 
+  // tries to craft a recipe, returns true if there was a recipe crafted
   private boolean tryCraft(ItemStack in) {
     AlchemyRecipeInventory inv = new AlchemyRecipeInventory(aspects, in.getItem());
 
@@ -78,22 +82,45 @@ public class CrucibleTE extends TileEntity implements ITickableTileEntity {
     world.setBlockState(pos, getBlockState().with(Crucible.LEVEL, getBlockState().get(Crucible.LEVEL) - 1));
     //TODO play sound
 
-    world.addEntity(new ItemEntity(world, getPos().getX(), getPos().getY() + 1, getPos().getZ(), recipe.get().getCraftingResult(inv)));
+    ItemEntity itemEntity = new ItemEntity(world, getPos().getX(), getPos().getY() + 1.2, getPos().getZ(), recipe.get().getCraftingResult(inv));
+    itemEntity.setNoGravity(true);
+    world.addEntity(itemEntity);
 
     return true;
   }
 
+  // NBT (de)serialization
+  private static final String ASPECTS_TAG = "aspects";
+  private static final String HEAT_TAG = "heat";
+
+  @Override
+  public void read(BlockState state, CompoundNBT nbt) {
+    super.read(state, nbt);
+
+    aspects.deserializeNBT(nbt.getCompound(ASPECTS_TAG));
+    heat = nbt.getInt(HEAT_TAG);
+
+  }
+
+  @Override
+  public CompoundNBT write(CompoundNBT nbt) {
+    super.write(nbt);
+
+    nbt.put(ASPECTS_TAG, aspects.serializeNBT());
+    nbt.putInt(HEAT_TAG, heat);
+
+    return nbt;
+  }
+
+  @Override
+  public CompoundNBT getUpdateTag() {
+    return this.write(new CompoundNBT());
+  }
+
+  // Client-Server Sync
   @Override
   public SUpdateTileEntityPacket getUpdatePacket() {
-    CompoundNBT tag = new CompoundNBT();
-    tag.putInt("size", aspects.size());
-
-    AtomicInteger i = new AtomicInteger(0);
-    aspects.forEach((aspect, amount) -> {
-      tag.putString("aspect" + i, aspect);
-      tag.putInt("amount" + i, amount);
-      i.incrementAndGet();
-    });
+    CompoundNBT tag = aspects.serializeNBT();
 
     return new SUpdateTileEntityPacket(getPos(), -1, tag);
   }
@@ -101,17 +128,9 @@ public class CrucibleTE extends TileEntity implements ITickableTileEntity {
   @Override
   public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
     CompoundNBT tag = pkt.getNbtCompound();
-    int size = tag.getInt("size");
 
-    aspects.clear();
+    aspects.deserializeNBT(tag);
 
-    for (int i = 0; i < size; i++) {
-      String aspect = tag.getString("aspect" + i);
-      int amount = tag.getInt("amount" + i);
-
-      aspects.add(aspect, amount);
-    }
-
-    super.onDataPacket(net, pkt);
+    //super.onDataPacket(net, pkt);
   }
 }

@@ -4,14 +4,16 @@ import java.util.Hashtable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import io.github.jvcmarcenes.tca.blocks.Crucible.Crucible;
 import io.github.jvcmarcenes.tca.init.ModBlocks;
 import io.github.jvcmarcenes.tca.init.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CauldronBlock;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,24 +31,27 @@ public class SalisMundusEffects {
   }
 
   public static void registerEffects() {
-    addEffect(Blocks.CRAFTING_TABLE, context -> {
+    addEffect(Blocks.CRAFTING_TABLE, context -> { //Crafting Table --> Arcane Workbench
       context.getWorld().setBlockState(context.getPos(), ModBlocks.ARCANE_WORKBENCH.get().getDefaultState());
     });
 
-    addEffect(Blocks.CAULDRON, context -> {
-      context.getWorld().setBlockState(context.getPos(), ModBlocks.CRUCIBLE.get().getDefaultState());
+    addEffect(Blocks.CAULDRON, context -> { // Cauldron --> Crucible
+      int cauldronLevel = context.getWorld().getBlockState(context.getPos()).get(CauldronBlock.LEVEL);
+      int crucibleLevel = (int)Math.floor(((float)cauldronLevel * (float)Crucible.MAX_LEVEL/3f));
+      context.getWorld().setBlockState(context.getPos(), ModBlocks.CRUCIBLE.get().getDefaultState().with(Crucible.LEVEL, crucibleLevel));
     });
 
-    addEffect(Blocks.BOOKSHELF, context -> {
+    addEffect(Blocks.BOOKSHELF, context -> { // Bookshelf --> Thaumonomicon
       World world =  context.getWorld();
       BlockPos pos = context.getPos();
       world.setBlockState(pos, Blocks.AIR.getDefaultState());
-      ItemStack stack = new ItemStack(Items.BOOK, 3);
-      ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-      world.addEntity(itemEntity);
+      ItemStack stack = new ItemStack(ModItems.THAUMONOMICON.get());
+      // ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+      // world.addEntity(itemEntity);
+      spawnItemStack(world, pos, stack);
     });
 
-    addEffect(Blocks.DIAMOND_BLOCK, context -> {
+    addEffect(Blocks.DIAMOND_BLOCK, context -> { // DEV_ONLY Diamond Block --> Creative Cell
       World world = context.getWorld();
       BlockPos pos = context.getPos();
       world.setBlockState(pos, Blocks.AIR.getDefaultState());
@@ -55,8 +60,13 @@ public class SalisMundusEffects {
       tag.putInt("visCap", 1000);
       tag.putInt("currentVis", 1000);
       stack.setTag(tag);
-      ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-      world.addEntity(itemEntity);
+      // ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+      // world.addEntity(itemEntity);
+      spawnItemStack(world, pos, stack);
     });
+  }
+
+  private static void spawnItemStack(World world, BlockPos pos, ItemStack stack) {
+    InventoryHelper.spawnItemStack(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, stack);
   }
 }

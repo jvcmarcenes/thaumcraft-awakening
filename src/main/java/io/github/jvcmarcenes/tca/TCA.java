@@ -12,8 +12,7 @@ import io.github.jvcmarcenes.tca.world.aura.AuraChunkCapabilityProvider;
 import io.github.jvcmarcenes.tca.world.aura.AuraChunk;
 import io.github.jvcmarcenes.tca.world.aura.AuraChunkStorage;
 import io.github.jvcmarcenes.tca.world.biomes.ModBiomes;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.client.renderer.entity.ItemFrameRenderer;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -109,7 +108,7 @@ public class TCA {
   public static final ItemGroup ITEM_GROUP = new ItemGroup(MOD_ID) {
     @Override
     public ItemStack createIcon() {
-      return new ItemStack(Items.GOLDEN_AXE);
+      return new ItemStack(ModItems.THAUMONOMICON.get());
     }
   };
 
