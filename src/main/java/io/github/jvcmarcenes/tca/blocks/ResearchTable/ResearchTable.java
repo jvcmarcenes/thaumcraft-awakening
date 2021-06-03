@@ -2,11 +2,9 @@ package io.github.jvcmarcenes.tca.blocks.ResearchTable;
 
 import io.github.jvcmarcenes.tca.init.ModTileEntityTypes;
 import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.DoorBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,7 +30,11 @@ public class ResearchTable extends HorizontalBlock {
         .notSolid()
     );
 
-    setDefaultState(stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH).with(PART, Part.LEFT));
+    setDefaultState(
+      stateContainer.getBaseState()
+        .with(HORIZONTAL_FACING, Direction.NORTH)
+        .with(PART, Part.LEFT) 
+    );
   }
 
   public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);

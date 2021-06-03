@@ -15,6 +15,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelTransform;
 
+@SuppressWarnings("deprecation")
 public class BakedModelHelper {
 
   private static final FaceBakery faceBakery = new FaceBakery();

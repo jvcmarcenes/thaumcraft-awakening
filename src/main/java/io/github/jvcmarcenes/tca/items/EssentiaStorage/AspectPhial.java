@@ -2,7 +2,6 @@ package io.github.jvcmarcenes.tca.items.EssentiaStorage;
 
 import io.github.jvcmarcenes.tca.alchemy.Aspects;
 import io.github.jvcmarcenes.tca.init.ModItems;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;

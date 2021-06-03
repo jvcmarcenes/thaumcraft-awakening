@@ -21,6 +21,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.IModelData;
 
+@SuppressWarnings("deprecation")
 public class CrucibleBakedModel implements IBakedModel {
 
   public CrucibleBakedModel(IBakedModel baseModel) {

@@ -1,21 +1,31 @@
 package io.github.jvcmarcenes.tca;
 
+import java.lang.reflect.Method;
+import java.util.Random;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import io.github.jvcmarcenes.tca.alchemy.Aspects;
-import io.github.jvcmarcenes.tca.init.*;
-import io.github.jvcmarcenes.tca.world.aura.AuraTickHandler;
-import io.github.jvcmarcenes.tca.world.aura.BiomeAuraAffinity;
 import io.github.jvcmarcenes.tca.client.ClientEventHandler;
 import io.github.jvcmarcenes.tca.client.ClientEventHandlerForge;
+import io.github.jvcmarcenes.tca.init.ModBlocks;
+import io.github.jvcmarcenes.tca.init.ModCapabilities;
+import io.github.jvcmarcenes.tca.init.ModContainerTypes;
+import io.github.jvcmarcenes.tca.init.ModEntities;
+import io.github.jvcmarcenes.tca.init.ModItems;
+import io.github.jvcmarcenes.tca.init.ModRecipeSerializers;
+import io.github.jvcmarcenes.tca.init.ModTileEntityTypes;
 import io.github.jvcmarcenes.tca.items.SalisMundus.SalisMundusEffects;
 import io.github.jvcmarcenes.tca.recipe.ModRecipeTypes;
-import io.github.jvcmarcenes.tca.world.aura.AuraChunkCapabilityProvider;
 import io.github.jvcmarcenes.tca.world.aura.AuraChunk;
+import io.github.jvcmarcenes.tca.world.aura.AuraChunkCapabilityProvider;
 import io.github.jvcmarcenes.tca.world.aura.AuraChunkStorage;
+import io.github.jvcmarcenes.tca.world.aura.AuraTickHandler;
+import io.github.jvcmarcenes.tca.world.aura.BiomeAuraAffinity;
 import io.github.jvcmarcenes.tca.world.biomes.ModBiomes;
-import net.minecraft.block.ChestBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ChunkHolder;
 import net.minecraft.world.server.ChunkManager;
@@ -28,11 +38,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.lang.reflect.Method;
-import java.util.Random;
 
 @Mod(TCA.MOD_ID)
 public class TCA {

@@ -17,6 +17,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 
+@SuppressWarnings("deprecation")
 public class JarBakedModel implements IBakedModel {
   
   public JarBakedModel(IBakedModel baseModel) {

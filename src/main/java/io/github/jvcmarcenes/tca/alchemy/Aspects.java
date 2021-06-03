@@ -81,11 +81,6 @@ public class Aspects {
     return aspect;
   }
 
-  private static String createAspect(String aspect) {
-    ASPECTS.add(aspect);
-    return aspect;
-  }
-
   public static final String AER = createAspect("aer", 0xffe25e);
   public static final String ALKIMIA = createAspect("alkimia", 0x51e0a2);
   public static final String ALIENIS = createAspect("alienis", 0x7918ba);

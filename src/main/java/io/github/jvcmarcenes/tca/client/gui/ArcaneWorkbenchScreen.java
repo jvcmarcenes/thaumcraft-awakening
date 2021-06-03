@@ -3,6 +3,7 @@ package io.github.jvcmarcenes.tca.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import io.github.jvcmarcenes.tca.TCA;
 import io.github.jvcmarcenes.tca.blocks.ArcaneWorkbench.ArcaneWorkbenchContainer;
 import io.github.jvcmarcenes.tca.blocks.ArcaneWorkbench.ArcaneWorkbenchTE;
 import io.github.jvcmarcenes.tca.items.VisStorageItem.VisStorage;
@@ -12,9 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
+@SuppressWarnings("deprecation")
 public class ArcaneWorkbenchScreen extends ContainerScreen<ArcaneWorkbenchContainer> {
 
-  private static final ResourceLocation BG_TEX = new ResourceLocation("tca", "textures/gui/arcaneworkbench.png");
+  private static final ResourceLocation BG_TEX = new ResourceLocation(TCA.MOD_ID, "textures/gui/arcaneworkbench.png");
 
   public ArcaneWorkbenchScreen(ArcaneWorkbenchContainer container, PlayerInventory inv, ITextComponent title) {
     super(container, inv, title);
@@ -60,7 +62,5 @@ public class ArcaneWorkbenchScreen extends ContainerScreen<ArcaneWorkbenchContai
     //   this.font.drawString(matrixStack, Integer.toUnsignedString(container.tileEntity.getVisStorageCharge()), 8, 20, 0x300060);
     // }
     // this.font.drawString(matrixStack, Integer.toUnsignedString(container.tileEntity.visCost), 8, 34, 0x300060);
-
-
   }
 }

@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-//TODO for some reason the arcane recipes aren't working, I suppose the error is in ArcaneShapedRecipe#match
+//TODO for some reason the arcane recipes aren't working, I suppose the error is in ArcaneShapedRecipe#match > done?? I have no clue when I Wrote this
 public class ArcaneWorkbenchTE extends TileEntity implements INamedContainerProvider, ICraftingTE {
 
   public static final int CRAFT_MATRIX_SLOT_START = 0;

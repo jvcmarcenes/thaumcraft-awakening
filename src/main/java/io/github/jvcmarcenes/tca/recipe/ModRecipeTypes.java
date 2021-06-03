@@ -15,7 +15,6 @@ public class ModRecipeTypes {
   public static IRecipeType<IArcaneCraftingRecipe> ARCANE;
   public static IRecipeType<AlchemyRecipe> ALCHEMY;
 
-
   @SubscribeEvent
   public static void registerRecipeTypes(RegistryEvent.Register<IRecipeSerializer<?>> e) {
     ARCANE = IRecipeType.register("arcane_crafting");

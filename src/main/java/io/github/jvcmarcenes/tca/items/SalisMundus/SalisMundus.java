@@ -20,15 +20,17 @@ public class SalisMundus extends Item {
 
     Optional<Consumer<ItemUseContext>> effect = SalisMundusEffects.getEffect(block);
 
-    if (effect.isPresent()) {
-      effect.get().accept(context);
+    if (!effect.isPresent()) return ActionResultType.PASS;
 
-      if (!context.getPlayer().abilities.isCreativeMode)
-        context.getItem().shrink(1);
+    // play salis mundus particle animation
 
-      return ActionResultType.SUCCESS;
-    } else {
-      return ActionResultType.PASS;
-    }
+    effect.get().accept(context);
+
+    // play salis mundus sfx
+
+    if (!context.getPlayer().abilities.isCreativeMode)
+      context.getItem().shrink(1);
+
+    return ActionResultType.SUCCESS;
   }
 }
